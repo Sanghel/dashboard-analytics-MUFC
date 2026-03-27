@@ -5,6 +5,9 @@ import * as fixturesHook from './useFixtures';
 import type { Fixture } from '@/shared/types/football';
 
 vi.mock('./useFixtures');
+vi.mock('@/infrastructure/api/endpoints/fixtures.api', () => ({
+  fetchFixtures: vi.fn().mockResolvedValue([]),
+}));
 
 function makeFixture(
   id: number,
