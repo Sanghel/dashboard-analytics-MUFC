@@ -5,9 +5,10 @@ import { createElement } from 'react';
 import { LiveMatchPage } from './LiveMatchPage';
 import type { Fixture, FixtureEvent, FixtureStatTeam } from '@/shared/types/football';
 
-const { mockUseRecentFixtures, mockUseFixtureDetail } = vi.hoisted(() => ({
+const { mockUseRecentFixtures, mockUseFixtureDetail, mockUseLiveFixtures } = vi.hoisted(() => ({
   mockUseRecentFixtures: vi.fn(),
   mockUseFixtureDetail: vi.fn(),
+  mockUseLiveFixtures: vi.fn(),
 }));
 
 vi.mock('@/presentation/hooks/useFixtures', () => ({
@@ -16,6 +17,10 @@ vi.mock('@/presentation/hooks/useFixtures', () => ({
 
 vi.mock('@/presentation/hooks/useFixtureDetail', () => ({
   useFixtureDetail: mockUseFixtureDetail,
+}));
+
+vi.mock('@/presentation/hooks/useLiveFixtures', () => ({
+  useLiveFixtures: mockUseLiveFixtures,
 }));
 
 const mockFixture: Fixture = {
@@ -79,6 +84,8 @@ describe('LiveMatchPage', () => {
   beforeEach(() => {
     mockUseRecentFixtures.mockReset();
     mockUseFixtureDetail.mockReset();
+    mockUseLiveFixtures.mockReset();
+    mockUseLiveFixtures.mockReturnValue({ fixtures: [], hasLiveMatch: false, isLoading: false });
   });
 
   it('shows loading state', () => {
@@ -165,5 +172,92 @@ describe('LiveMatchPage', () => {
     render(createElement(LiveMatchPage), { wrapper: createWrapper() });
     expect(screen.getByText('No events available')).toBeInTheDocument();
     expect(screen.getByText('No statistics available')).toBeInTheDocument();
+  });
+
+  it('shows live fixture when useLiveFixtures returns data', async () => {
+    const liveFixture: Fixture = {
+      id: 999,
+      date: '2025-03-27T18:00:00+00:00',
+      timestamp: 1743098400,
+      status: { long: 'First Half', short: '1H', elapsed: 35 },
+      homeTeam: { id: 33, name: 'Manchester United', shortName: 'MU', logo: '' },
+      awayTeam: { id: 50, name: 'Manchester City', shortName: 'MC', logo: '' },
+      homeGoals: 1,
+      awayGoals: 0,
+      league: { id: 39, name: 'Premier League', logo: '', round: 'Round 30' },
+      venue: { name: 'Old Trafford', city: 'Manchester' },
+    };
+
+    mockUseLiveFixtures.mockReturnValue({
+      fixtures: [liveFixture],
+      hasLiveMatch: true,
+      isLoading: false,
+    });
+    mockUseRecentFixtures.mockReturnValue({ data: [mockFixture], isLoading: false });
+    mockUseFixtureDetail.mockReturnValue({
+      events: [],
+      statistics: [],
+      isLoading: false,
+      isError: false,
+    });
+
+    render(createElement(LiveMatchPage), { wrapper: createWrapper() });
+
+    await waitFor(() => {
+      expect(screen.getByText('Manchester City')).toBeInTheDocument();
+    });
+    expect(screen.queryByText('Liverpool')).not.toBeInTheDocument();
+  });
+
+  it('shows LIVE badge when match is live', async () => {
+    const liveFixture: Fixture = {
+      id: 999,
+      date: '2025-03-27T18:00:00+00:00',
+      timestamp: 1743098400,
+      status: { long: 'First Half', short: '1H', elapsed: 35 },
+      homeTeam: { id: 33, name: 'Manchester United', shortName: 'MU', logo: '' },
+      awayTeam: { id: 50, name: 'Manchester City', shortName: 'MC', logo: '' },
+      homeGoals: 1,
+      awayGoals: 0,
+      league: { id: 39, name: 'Premier League', logo: '', round: 'Round 30' },
+      venue: { name: 'Old Trafford', city: 'Manchester' },
+    };
+
+    mockUseLiveFixtures.mockReturnValue({
+      fixtures: [liveFixture],
+      hasLiveMatch: true,
+      isLoading: false,
+    });
+    mockUseRecentFixtures.mockReturnValue({ data: [mockFixture], isLoading: false });
+    mockUseFixtureDetail.mockReturnValue({
+      events: [],
+      statistics: [],
+      isLoading: false,
+      isError: false,
+    });
+
+    render(createElement(LiveMatchPage), { wrapper: createWrapper() });
+
+    await waitFor(() => {
+      expect(screen.getByText(/LIVE/)).toBeInTheDocument();
+    });
+  });
+
+  it('falls back to recent fixture when no live match', async () => {
+    mockUseLiveFixtures.mockReturnValue({ fixtures: [], hasLiveMatch: false, isLoading: false });
+    mockUseRecentFixtures.mockReturnValue({ data: [mockFixture], isLoading: false });
+    mockUseFixtureDetail.mockReturnValue({
+      events: [],
+      statistics: [],
+      isLoading: false,
+      isError: false,
+    });
+
+    render(createElement(LiveMatchPage), { wrapper: createWrapper() });
+
+    await waitFor(() => {
+      expect(screen.getByText('Liverpool')).toBeInTheDocument();
+    });
+    expect(screen.queryByText(/LIVE/)).not.toBeInTheDocument();
   });
 });
