@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { fetchPlayers } from './players.api';
 import { footballApiClient } from '../footballApi';
 import { env } from '@/shared/config/env';
@@ -15,6 +15,10 @@ const mockGet = vi.mocked(footballApiClient.get);
 
 describe('fetchPlayers', () => {
   beforeEach(() => vi.clearAllMocks());
+
+  afterEach(() => {
+    vi.mocked(env).useMockData = false;
+  });
 
   it('fetches a single page when total pages is 1', async () => {
     mockGet.mockResolvedValueOnce({
@@ -89,6 +93,5 @@ describe('fetchPlayers', () => {
     const result = await fetchPlayers(33, 2024);
     expect(mockGet).not.toHaveBeenCalled();
     expect(Array.isArray(result)).toBe(true);
-    vi.mocked(env).useMockData = false;
   });
 });

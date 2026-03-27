@@ -3,6 +3,8 @@ import { env } from '@/shared/config/env';
 import playersMock from '../mocks/players.mock.json';
 import type { PlayerStats } from '@/shared/types/football';
 
+const MAX_PAGES = 20;
+
 export async function fetchPlayers(teamId = env.teamId, season = 2024): Promise<PlayerStats[]> {
   if (env.useMockData) {
     return playersMock.response as unknown as PlayerStats[];
@@ -16,10 +18,10 @@ export async function fetchPlayers(teamId = env.teamId, season = 2024): Promise<
     const { data } = await footballApiClient.get('/players', {
       params: { team: teamId, season, page: currentPage },
     });
-    allPlayers.push(...(data.response as PlayerStats[]));
-    totalPages = data.paging.total as number;
+    allPlayers.push(...((data.response as PlayerStats[]) ?? []));
+    totalPages = (data.paging?.total as number) ?? 1;
     currentPage++;
-  } while (currentPage <= totalPages);
+  } while (currentPage <= totalPages && currentPage <= MAX_PAGES);
 
   return allPlayers;
 }
