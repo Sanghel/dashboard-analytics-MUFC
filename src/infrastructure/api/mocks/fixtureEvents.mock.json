@@ -1,0 +1,31 @@
+{
+  "response": [
+    {
+      "time": { "elapsed": 12, "extra": null },
+      "team": { "id": 33, "name": "Manchester United", "logo": "" },
+      "player": { "id": 19185, "name": "M. Rashford" },
+      "assist": { "id": null, "name": null },
+      "type": "Goal",
+      "detail": "Normal Goal",
+      "comments": null
+    },
+    {
+      "time": { "elapsed": 34, "extra": null },
+      "team": { "id": 40, "name": "Liverpool", "logo": "" },
+      "player": { "id": 18978, "name": "M. Salah" },
+      "assist": { "id": null, "name": null },
+      "type": "Card",
+      "detail": "Yellow Card",
+      "comments": null
+    },
+    {
+      "time": { "elapsed": 45, "extra": 2 },
+      "team": { "id": 33, "name": "Manchester United", "logo": "" },
+      "player": { "id": 521, "name": "B. Fernandes" },
+      "assist": { "id": null, "name": null },
+      "type": "Goal",
+      "detail": "Penalty",
+      "comments": null
+    }
+  ]
+}
