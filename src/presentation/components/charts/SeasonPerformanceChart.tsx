@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import {
   AreaChart,
   Area,
@@ -21,15 +22,19 @@ interface SeasonPerformanceChartProps {
 }
 
 export function SeasonPerformanceChart({ data }: SeasonPerformanceChartProps) {
+  const id = useId().replace(/:/g, '');
+  const goalsGradientId = `goalsGradient-${id}`;
+  const goalsAgainstGradientId = `goalsAgainstGradient-${id}`;
+
   return (
     <ResponsiveContainer width="100%" height={220}>
       <AreaChart data={data} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
         <defs>
-          <linearGradient id="goalsGradient" x1="0" y1="0" x2="0" y2="1">
+          <linearGradient id={goalsGradientId} x1="0" y1="0" x2="0" y2="1">
             <stop offset="5%" stopColor="#DA291C" stopOpacity={0.4} />
             <stop offset="95%" stopColor="#DA291C" stopOpacity={0} />
           </linearGradient>
-          <linearGradient id="goalsAgainstGradient" x1="0" y1="0" x2="0" y2="1">
+          <linearGradient id={goalsAgainstGradientId} x1="0" y1="0" x2="0" y2="1">
             <stop offset="5%" stopColor="#6b7280" stopOpacity={0.3} />
             <stop offset="95%" stopColor="#6b7280" stopOpacity={0} />
           </linearGradient>
@@ -56,7 +61,7 @@ export function SeasonPerformanceChart({ data }: SeasonPerformanceChartProps) {
           dataKey="goals"
           stroke="#DA291C"
           strokeWidth={2}
-          fill="url(#goalsGradient)"
+          fill={`url(#${goalsGradientId})`}
           name="Goals For"
           dot={false}
         />
@@ -65,7 +70,7 @@ export function SeasonPerformanceChart({ data }: SeasonPerformanceChartProps) {
           dataKey="goalsAgainst"
           stroke="#6b7280"
           strokeWidth={2}
-          fill="url(#goalsAgainstGradient)"
+          fill={`url(#${goalsAgainstGradientId})`}
           name="Goals Against"
           dot={false}
         />
