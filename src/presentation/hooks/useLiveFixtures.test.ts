@@ -8,8 +8,6 @@ vi.mock('@/infrastructure/api/endpoints/liveFixtures.api', () => ({
   fetchLiveFixtures: mockFetchLiveFixtures,
 }));
 
-vi.mock('@/infrastructure/api/endpoints/fixtures.api');
-
 import { useLiveFixtures } from './useLiveFixtures';
 
 function createWrapper() {
