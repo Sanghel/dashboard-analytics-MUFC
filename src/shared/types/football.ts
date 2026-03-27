@@ -132,15 +132,15 @@ export interface FixtureEvent {
   time: { elapsed: number; extra: number | null };
   team: { id: number; name: string; logo: string };
   player: { id: number | null; name: string | null };
-  assist: { id: number | null; name: string | null };
-  type: 'Goal' | 'Card' | 'subst' | 'Var';
+  assist?: { id: number | null; name: string | null };
+  type: 'Goal' | 'Card' | 'subst' | 'Var' | string;
   detail: string;
   comments: string | null;
 }
 
 export interface FixtureStat {
   type: string;
-  value: number | string | null;
+  value: number | string | boolean | null;
 }
 
 export interface FixtureStatTeam {
