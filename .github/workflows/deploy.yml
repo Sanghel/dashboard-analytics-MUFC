@@ -1,11 +1,15 @@
 name: Deploy to Vercel
 
+# Vercel handles deployment automatically via GitHub integration.
+# This workflow exists as a record/status check only.
+# When a push to main passes CI, Vercel auto-deploys via webhook.
+
 on:
   push:
     branches: [main]
 
 jobs:
-  deploy:
+  verify-before-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,13 +24,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Lint
+        run: npm run lint
+
+      - name: Test with coverage
+        run: npm run test:coverage
+
       - name: Build
         run: npm run build
 
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.ORG_ID }}
-          vercel-project-id: ${{ secrets.PROJECT_ID }}
-          vercel-args: '--prod'
+      - name: Deployment triggered
+        run: echo "✅ All checks passed. Vercel deployment triggered via GitHub integration."
