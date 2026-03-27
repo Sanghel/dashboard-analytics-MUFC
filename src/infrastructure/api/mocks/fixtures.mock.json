@@ -1,0 +1,149 @@
+{
+  "response": [
+    {
+      "fixture": {
+        "id": 1001,
+        "date": "2025-04-05T15:00:00+00:00",
+        "timestamp": 1743861600,
+        "status": { "long": "Not Started", "short": "NS", "elapsed": null }
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "round": "Regular Season - 32"
+      },
+      "teams": {
+        "home": {
+          "id": 33,
+          "name": "Manchester United",
+          "logo": "https://media.api-sports.io/football/teams/33.png"
+        },
+        "away": {
+          "id": 42,
+          "name": "Arsenal",
+          "logo": "https://media.api-sports.io/football/teams/42.png"
+        }
+      },
+      "goals": { "home": null, "away": null },
+      "score": { "fulltime": { "home": null, "away": null } },
+      "venue": { "name": "Old Trafford", "city": "Manchester" }
+    },
+    {
+      "fixture": {
+        "id": 1002,
+        "date": "2025-04-12T14:00:00+00:00",
+        "timestamp": 1744466400,
+        "status": { "long": "Not Started", "short": "NS", "elapsed": null }
+      },
+      "league": {
+        "id": 2,
+        "name": "UEFA Champions League",
+        "logo": "https://media.api-sports.io/football/leagues/2.png",
+        "round": "Quarter-Finals"
+      },
+      "teams": {
+        "home": {
+          "id": 157,
+          "name": "Bayern Munich",
+          "logo": "https://media.api-sports.io/football/teams/157.png"
+        },
+        "away": {
+          "id": 33,
+          "name": "Manchester United",
+          "logo": "https://media.api-sports.io/football/teams/33.png"
+        }
+      },
+      "goals": { "home": null, "away": null },
+      "score": { "fulltime": { "home": null, "away": null } },
+      "venue": { "name": "Allianz Arena", "city": "München" }
+    },
+    {
+      "fixture": {
+        "id": 2001,
+        "date": "2025-03-22T15:00:00+00:00",
+        "timestamp": 1742655600,
+        "status": { "long": "Match Finished", "short": "FT", "elapsed": 90 }
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "round": "Regular Season - 30"
+      },
+      "teams": {
+        "home": {
+          "id": 33,
+          "name": "Manchester United",
+          "logo": "https://media.api-sports.io/football/teams/33.png"
+        },
+        "away": {
+          "id": 48,
+          "name": "West Ham",
+          "logo": "https://media.api-sports.io/football/teams/48.png"
+        }
+      },
+      "goals": { "home": 3, "away": 1 },
+      "score": { "fulltime": { "home": 3, "away": 1 } },
+      "venue": { "name": "Old Trafford", "city": "Manchester" }
+    },
+    {
+      "fixture": {
+        "id": 2002,
+        "date": "2025-03-15T17:30:00+00:00",
+        "timestamp": 1742053800,
+        "status": { "long": "Match Finished", "short": "FT", "elapsed": 90 }
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "round": "Regular Season - 29"
+      },
+      "teams": {
+        "home": {
+          "id": 47,
+          "name": "Tottenham",
+          "logo": "https://media.api-sports.io/football/teams/47.png"
+        },
+        "away": {
+          "id": 33,
+          "name": "Manchester United",
+          "logo": "https://media.api-sports.io/football/teams/33.png"
+        }
+      },
+      "goals": { "home": 1, "away": 1 },
+      "score": { "fulltime": { "home": 1, "away": 1 } },
+      "venue": { "name": "Tottenham Hotspur Stadium", "city": "London" }
+    },
+    {
+      "fixture": {
+        "id": 2003,
+        "date": "2025-03-08T15:00:00+00:00",
+        "timestamp": 1741449600,
+        "status": { "long": "Match Finished", "short": "FT", "elapsed": 90 }
+      },
+      "league": {
+        "id": 2,
+        "name": "UEFA Champions League",
+        "logo": "https://media.api-sports.io/football/leagues/2.png",
+        "round": "Round of 16"
+      },
+      "teams": {
+        "home": {
+          "id": 33,
+          "name": "Manchester United",
+          "logo": "https://media.api-sports.io/football/teams/33.png"
+        },
+        "away": {
+          "id": 529,
+          "name": "Atletico Madrid",
+          "logo": "https://media.api-sports.io/football/teams/529.png"
+        }
+      },
+      "goals": { "home": 2, "away": 2 },
+      "score": { "fulltime": { "home": 2, "away": 2 } },
+      "venue": { "name": "Old Trafford", "city": "Manchester" }
+    }
+  ]
+}
