@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useRecentFixtures } from '@/presentation/hooks/useFixtures';
 import { useFixtureDetail } from '@/presentation/hooks/useFixtureDetail';
+import { useLiveFixtures } from '@/presentation/hooks/useLiveFixtures';
 import { MatchStatsChart } from '@/presentation/components/charts/MatchStatsChart';
 import { LoadingPage } from '@/presentation/components/feedback/LoadingSpinner';
 import { EmptyState } from '@/presentation/components/feedback/EmptyState';
@@ -41,24 +42,25 @@ function buildMatchStats(stats: FixtureStatTeam[], homeTeamId: number, awayTeamI
 export function LiveMatchPage() {
   const [now] = useState(() => Math.floor(Date.now() / 1000));
   const { data: recent, isLoading } = useRecentFixtures(now);
-  const lastMatch = recent?.[0];
+  const { fixtures: liveFixtures, hasLiveMatch } = useLiveFixtures();
+  const activeMatch = hasLiveMatch ? liveFixtures[0] : recent?.[0];
   const {
     events,
     statistics,
     isLoading: detailLoading,
     isError: detailError,
-  } = useFixtureDetail(lastMatch?.id);
+  } = useFixtureDetail(activeMatch?.id);
 
   if (isLoading) return <LoadingPage />;
-  if (!lastMatch)
+  if (!activeMatch)
     return (
       <EmptyState title="No match data available" description="No recent or live matches found." />
     );
 
-  const homeTeamName = lastMatch.homeTeam.name;
-  const awayTeamName = lastMatch.awayTeam.name;
+  const homeTeamName = activeMatch.homeTeam.name;
+  const awayTeamName = activeMatch.awayTeam.name;
   const matchStats = statistics
-    ? buildMatchStats(statistics, lastMatch.homeTeam.id, lastMatch.awayTeam.id)
+    ? buildMatchStats(statistics, activeMatch.homeTeam.id, activeMatch.awayTeam.id)
     : [];
 
   return (
@@ -72,7 +74,7 @@ export function LiveMatchPage() {
       <div className="bg-card border border-white/5 rounded-xl p-6">
         <div className="text-center mb-2">
           <span className="text-xs text-muted-foreground">
-            {lastMatch.league.name} · {lastMatch.league.round}
+            {activeMatch.league.name} · {activeMatch.league.round}
           </span>
         </div>
         <div className="flex items-center justify-between">
@@ -82,9 +84,14 @@ export function LiveMatchPage() {
           </div>
           <div className="text-center px-6">
             <p className="text-4xl font-bold text-foreground">
-              {lastMatch.homeGoals ?? '-'} - {lastMatch.awayGoals ?? '-'}
+              {activeMatch.homeGoals ?? '-'} - {activeMatch.awayGoals ?? '-'}
             </p>
-            <Badge className="mt-1 bg-muted text-muted-foreground">{lastMatch.status.long}</Badge>
+            <Badge className="mt-1 bg-muted text-muted-foreground">{activeMatch.status.long}</Badge>
+            {hasLiveMatch && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-600 text-white text-xs font-bold animate-pulse">
+                ● LIVE
+              </span>
+            )}
           </div>
           <div className="text-center flex-1">
             <p className="text-lg font-bold text-foreground">{awayTeamName}</p>
@@ -116,7 +123,7 @@ export function LiveMatchPage() {
           ) : events && events.length > 0 ? (
             <div className="space-y-3">
               {events.map((event, i) => {
-                const isHome = event.team.id === lastMatch.homeTeam.id;
+                const isHome = event.team.id === activeMatch.homeTeam.id;
                 return (
                   <div
                     key={i}
