@@ -63,6 +63,20 @@ describe('computePerformance', () => {
     expect(result[0]).toEqual({ matchday: 'GW1', goals: 1, goalsAgainst: 3, points: 0 });
   });
 
+  it('treats null goals as 0 for a FT fixture (draw)', () => {
+    const fixture = makeFixture(
+      99,
+      33,
+      40,
+      null as unknown as number,
+      null as unknown as number,
+      1000
+    );
+    const result = computePerformance([fixture]);
+    expect(result).toHaveLength(1);
+    expect(result[0]).toEqual({ matchday: 'GW1', goals: 0, goalsAgainst: 0, points: 1 });
+  });
+
   it('excludes non-finished matches', () => {
     const fixtures = [
       makeFixture(1, 33, 40, 2, 0, 1000), // FT - include
