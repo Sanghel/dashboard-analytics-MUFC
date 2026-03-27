@@ -14,9 +14,9 @@ function parseStatValue(value: number | string | boolean | null): number {
   return parseInt(value.replace('%', ''), 10) || 0;
 }
 
-function buildMatchStats(stats: FixtureStatTeam[], homeTeamId: number) {
+function buildMatchStats(stats: FixtureStatTeam[], homeTeamId: number, awayTeamId: number) {
   const homeStats = stats.find((s) => s.team.id === homeTeamId);
-  const awayStats = stats.find((s) => s.team.id !== homeTeamId);
+  const awayStats = stats.find((s) => s.team.id === awayTeamId);
   if (!homeStats || !awayStats) return [];
 
   const statTypes = [
@@ -42,7 +42,12 @@ export function LiveMatchPage() {
   const [now] = useState(() => Math.floor(Date.now() / 1000));
   const { data: recent, isLoading } = useRecentFixtures(now);
   const lastMatch = recent?.[0];
-  const { events, statistics, isLoading: detailLoading } = useFixtureDetail(lastMatch?.id);
+  const {
+    events,
+    statistics,
+    isLoading: detailLoading,
+    isError: detailError,
+  } = useFixtureDetail(lastMatch?.id);
 
   if (isLoading) return <LoadingPage />;
   if (!lastMatch)
@@ -52,7 +57,9 @@ export function LiveMatchPage() {
 
   const homeTeamName = lastMatch.homeTeam.name;
   const awayTeamName = lastMatch.awayTeam.name;
-  const matchStats = statistics ? buildMatchStats(statistics, lastMatch.homeTeam.id) : [];
+  const matchStats = statistics
+    ? buildMatchStats(statistics, lastMatch.homeTeam.id, lastMatch.awayTeam.id)
+    : [];
 
   return (
     <div className="space-y-6">
@@ -94,6 +101,8 @@ export function LiveMatchPage() {
             <p className="text-sm text-muted-foreground">Loading statistics...</p>
           ) : matchStats.length > 0 ? (
             <MatchStatsChart stats={matchStats} homeTeam={homeTeamName} awayTeam={awayTeamName} />
+          ) : detailError ? (
+            <p className="text-sm text-red-400">Failed to load statistics</p>
           ) : (
             <p className="text-sm text-muted-foreground">No statistics available</p>
           )}
@@ -128,6 +137,8 @@ export function LiveMatchPage() {
                 );
               })}
             </div>
+          ) : detailError ? (
+            <p className="text-sm text-red-400">Failed to load events</p>
           ) : (
             <p className="text-sm text-muted-foreground">No events available</p>
           )}

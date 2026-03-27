@@ -139,6 +139,20 @@ describe('LiveMatchPage', () => {
     expect(screen.getByText('Loading events...')).toBeInTheDocument();
   });
 
+  it('shows error state when detail query fails', async () => {
+    mockUseRecentFixtures.mockReturnValue({ data: [mockFixture], isLoading: false });
+    mockUseFixtureDetail.mockReturnValue({
+      events: undefined,
+      statistics: undefined,
+      isLoading: false,
+      isError: true,
+    });
+
+    render(createElement(LiveMatchPage), { wrapper: createWrapper() });
+    expect(screen.getByText('Failed to load statistics')).toBeInTheDocument();
+    expect(screen.getByText('Failed to load events')).toBeInTheDocument();
+  });
+
   it('shows empty fallback when no events available', async () => {
     mockUseRecentFixtures.mockReturnValue({ data: [mockFixture], isLoading: false });
     mockUseFixtureDetail.mockReturnValue({
