@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createElement } from 'react';
@@ -26,6 +26,11 @@ function createWrapper() {
 }
 
 describe('useFixtureDetail', () => {
+  beforeEach(() => {
+    mockFetchFixtureEvents.mockReset();
+    mockFetchFixtureStatistics.mockReset();
+  });
+
   it('does not fetch when fixtureId is undefined', () => {
     const { result } = renderHook(() => useFixtureDetail(undefined), {
       wrapper: createWrapper(),

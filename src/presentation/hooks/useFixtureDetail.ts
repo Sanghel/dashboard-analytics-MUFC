@@ -3,6 +3,13 @@ import { fetchFixtureEvents } from '@/infrastructure/api/endpoints/fixtureEvents
 import { fetchFixtureStatistics } from '@/infrastructure/api/endpoints/fixtureStatistics.api';
 import type { FixtureEvent, FixtureStatTeam } from '@/shared/types/football';
 
+/**
+ * Fetches fixture events and statistics for a given fixture ID.
+ *
+ * Both queries are disabled when `fixtureId` is `undefined`.
+ * Note: `events` and `statistics` are `undefined` both while loading
+ * AND when `fixtureId` is `undefined` — consumers must handle both cases.
+ */
 export function useFixtureDetail(fixtureId: number | undefined) {
   const eventsQuery = useQuery<FixtureEvent[]>({
     queryKey: ['fixture', 'events', fixtureId],
