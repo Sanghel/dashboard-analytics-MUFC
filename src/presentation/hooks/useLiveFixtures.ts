@@ -5,7 +5,7 @@ import type { Fixture } from '@/shared/types/football';
 export function useLiveFixtures() {
   const { data, isLoading } = useQuery<Fixture[]>({
     queryKey: ['fixtures', 'live'],
-    queryFn: fetchLiveFixtures,
+    queryFn: () => fetchLiveFixtures(),
     refetchInterval: 30_000,
     staleTime: 0,
   });
