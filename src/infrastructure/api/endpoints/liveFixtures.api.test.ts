@@ -6,8 +6,6 @@ vi.mock('../footballApi', () => ({ footballApiClient: { get: mockGet } }));
 const mockEnv = vi.hoisted(() => ({ useMockData: false, teamId: 33 }));
 vi.mock('@/shared/config/env', () => ({ env: mockEnv }));
 
-vi.mock('@/infrastructure/api/endpoints/fixtures.api');
-
 import { fetchLiveFixtures } from './liveFixtures.api';
 
 describe('fetchLiveFixtures', () => {
