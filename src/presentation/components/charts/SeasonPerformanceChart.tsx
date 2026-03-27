@@ -9,13 +9,7 @@ import {
   ResponsiveContainer,
   Legend,
 } from 'recharts';
-
-interface PerformanceDataPoint {
-  matchday: string;
-  goals: number;
-  goalsAgainst: number;
-  points: number;
-}
+import type { PerformanceDataPoint } from '@/presentation/hooks/useSeasonPerformance';
 
 interface SeasonPerformanceChartProps {
   data: PerformanceDataPoint[];
