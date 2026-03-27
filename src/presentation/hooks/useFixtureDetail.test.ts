@@ -3,12 +3,19 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createElement } from 'react';
 import { useFixtureDetail } from './useFixtureDetail';
-import * as fixtureEventsApi from '@/infrastructure/api/endpoints/fixtureEvents.api';
-import * as fixtureStatsApi from '@/infrastructure/api/endpoints/fixtureStatistics.api';
 import type { FixtureEvent, FixtureStatTeam } from '@/shared/types/football';
 
-vi.mock('@/infrastructure/api/endpoints/fixtureEvents.api');
-vi.mock('@/infrastructure/api/endpoints/fixtureStatistics.api');
+const { mockFetchFixtureEvents, mockFetchFixtureStatistics } = vi.hoisted(() => ({
+  mockFetchFixtureEvents: vi.fn(),
+  mockFetchFixtureStatistics: vi.fn(),
+}));
+
+vi.mock('@/infrastructure/api/endpoints/fixtureEvents.api', () => ({
+  fetchFixtureEvents: mockFetchFixtureEvents,
+}));
+vi.mock('@/infrastructure/api/endpoints/fixtureStatistics.api', () => ({
+  fetchFixtureStatistics: mockFetchFixtureStatistics,
+}));
 
 function createWrapper() {
   const queryClient = new QueryClient({
@@ -26,8 +33,8 @@ describe('useFixtureDetail', () => {
     expect(result.current.events).toBeUndefined();
     expect(result.current.statistics).toBeUndefined();
     expect(result.current.isLoading).toBe(false);
-    expect(fixtureEventsApi.fetchFixtureEvents).not.toHaveBeenCalled();
-    expect(fixtureStatsApi.fetchFixtureStatistics).not.toHaveBeenCalled();
+    expect(mockFetchFixtureEvents).not.toHaveBeenCalled();
+    expect(mockFetchFixtureStatistics).not.toHaveBeenCalled();
   });
 
   it('fetches events and statistics when fixtureId is provided', async () => {
@@ -44,8 +51,8 @@ describe('useFixtureDetail', () => {
       statistics: [{ type: 'Ball Possession', value: '54%' }],
     };
 
-    vi.mocked(fixtureEventsApi.fetchFixtureEvents).mockResolvedValue([mockEvent]);
-    vi.mocked(fixtureStatsApi.fetchFixtureStatistics).mockResolvedValue([mockStat]);
+    mockFetchFixtureEvents.mockResolvedValue([mockEvent]);
+    mockFetchFixtureStatistics.mockResolvedValue([mockStat]);
 
     const { result } = renderHook(() => useFixtureDetail(215662), {
       wrapper: createWrapper(),
@@ -57,13 +64,13 @@ describe('useFixtureDetail', () => {
     expect(result.current.events![0].player.name).toBe('Rashford');
     expect(result.current.statistics).toHaveLength(1);
     expect(result.current.statistics![0].team.id).toBe(33);
-    expect(fixtureEventsApi.fetchFixtureEvents).toHaveBeenCalledWith(215662);
-    expect(fixtureStatsApi.fetchFixtureStatistics).toHaveBeenCalledWith(215662);
+    expect(mockFetchFixtureEvents).toHaveBeenCalledWith(215662);
+    expect(mockFetchFixtureStatistics).toHaveBeenCalledWith(215662);
   });
 
   it('reflects error state when events query fails', async () => {
-    vi.mocked(fixtureEventsApi.fetchFixtureEvents).mockRejectedValue(new Error('API error'));
-    vi.mocked(fixtureStatsApi.fetchFixtureStatistics).mockResolvedValue([]);
+    mockFetchFixtureEvents.mockRejectedValue(new Error('API error'));
+    mockFetchFixtureStatistics.mockResolvedValue([]);
 
     const { result } = renderHook(() => useFixtureDetail(99999), {
       wrapper: createWrapper(),
